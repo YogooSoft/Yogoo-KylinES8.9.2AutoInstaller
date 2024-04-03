@@ -164,7 +164,7 @@ cd /root/yogoo_es_ansible/playbook/script_bash
 bash do_elasticsearch-setup.sh -i es_8.9.2
 
 # 安装完成输出内容如下：
-ok: [node-126-master] => {
+ok: [node-126-master-8x] => {
     "output": [
         "",
         "### ### ### ### ### ### #",
@@ -183,15 +183,15 @@ ok: [node-126-master] => {
         "### ### ### ### ### ### #",
         "# Running Status #",
         "### ### ### ### ### ### #",
-        "cluster_testarm-node-126-master-8x   RUNNING   pid 263104, uptime 0:00:47",
-        "cluster_testarm-node-127-master-8x   RUNNING   pid 260663, uptime 0:00:47",
-        "cluster_testarm-node-128-master-8x   RUNNING   pid 289121, uptime 0:00:47",
-        "cluster_testarm-node-129-data-8x    RUNNING   pid 310241, uptime 0:00:47",
-        "cluster_testarm-node-130-data-8x    RUNNING   pid 322487, uptime 0:00:47",
-        "cluster_testarm-node-131-data-8x    RUNNING   pid 341429, uptime 0:00:47",
-        "cluster_testarm-node-132-data-8x    RUNNING   pid 362148, uptime 0:00:47",
-        "cluster_testarm-node-133-coord-8x   RUNNING   pid 472872, uptime 0:00:47",
-        "cluster_testarm-node-134-coord-8x   RUNNING   pid 435521, uptime 0:00:47"
+        "cluster_testarm8-node-126-master-8x   RUNNING   pid 263104, uptime 0:00:47",
+        "cluster_testarm8-node-127-master-8x   RUNNING   pid 260663, uptime 0:00:47",
+        "cluster_testarm8-node-128-master-8x   RUNNING   pid 289121, uptime 0:00:47",
+        "cluster_testarm8-node-129-data-8x    RUNNING   pid 310241, uptime 0:00:47",
+        "cluster_testarm8-node-130-data-8x    RUNNING   pid 322487, uptime 0:00:47",
+        "cluster_testarm8-node-131-data-8x    RUNNING   pid 341429, uptime 0:00:47",
+        "cluster_testarm8-node-132-data-8x    RUNNING   pid 362148, uptime 0:00:47",
+        "cluster_testarm8-node-133-coord-8x   RUNNING   pid 472872, uptime 0:00:47",
+        "cluster_testarm8-node-134-coord-8x   RUNNING   pid 435521, uptime 0:00:47"
     ]
 }
 ```
@@ -213,7 +213,7 @@ http://172.168.0.126:9200/_cat/nodes
 ```shell
 # 注意：扩容的集群需要在ES配置文件中配置
 cd /root/yogoo_es_ansible/playbook/script_bash
-bash do_elasticsearch-setup.sh -i es_8.9.2_add -s node-132-data,node-133-coord,node-134-coord
+bash do_elasticsearch-setup.sh -i es_8.9.2_add -s node-132-data-8x,node-133-coord-8x,node-134-coord-8x
 ```
 ### 6.2 测试滚动重启
 ```shell
@@ -302,7 +302,7 @@ curl -X PUT -H "Content-Type: application/json" -u "elastic:Oju******Ev0"  http:
 cd /root/yogoo_es_ansible/playbook/script_bash
 bash do_elasticsearch-add-cert.sh -i es_8.9.2_add
 # 结果查看[在节点服务器查看]
-cd /opt/elk/cluster_testarm/elasticsearch/node-134-coord/config/certs
+cd /opt/elk/cluster_testarm8/elasticsearch/node-134-coord-8x/config/certs
 openssl pkcs12 -in elastic-certificates.p12 -clcerts -nodes | openssl x509 -noout -enddate
 # 浏览器访问查看
 http://172.168.0.126:9200/_ssl/certificates
@@ -313,11 +313,10 @@ http://172.168.0.126:9200/_ssl/certificates
 vi /root/yogoo_es_ansible/playbook/inventory/es_8.9.2_more
 # 在节点配置中增加节点信息
 # ansible_host指定为同一个ip；节点名称为不同名称；分别指定http_port、transport_port为不同的端口；jvm_heap_memory根据具体情况分配，如合计超过服务器内存则会导致节点无法启动。示例如下：
-node-131-data ansible_host=172.168.0.131 node_name=node-131-data path_data=/data/elasticsearch/node-131-data  path_logs=/data/elasticsearch/logs/node-131-data http_port=9201 transport_port=9301 jvm_heap_memory=1g
-node-131-data-02 ansible_host=172.168.0.131 node_name=node-131-data-02 path_data=/data/elasticsearch/node-131-data-02  path_logs=/data/elasticsearch/logs/node-131-data-02 http_port=9202 transport_port=9302 jvm_heap_memory=1g
-
+node-129-data-8x-01 ansible_host=172.168.0.129 node_name=node-129-data-8x-01 path_data=/data/elasticsearch/node-129-data-8x-01  path_logs=/data/elasticsearch/logs/node-129-data-8x-01 http_port=9201 transport_port=9301 jvm_heap_memory=1g
+node-129-data-8x-02 ansible_host=172.168.0.129 node_name=node-129-data-8x-02 path_data=/data/elasticsearch/node-129-data-8x-02  path_logs=/data/elasticsearch/logs/node-129-data-8x-02 http_port=9202 transport_port=9302 jvm_heap_memory=1g
 # 如果是新的节点直接执行扩容剧本
-bash do_elasticsearch-setup.sh -i es_8.9.2_more -s node-131-data,node-131-data-02
+bash do_elasticsearch-setup.sh -i es_8.9.2_more -s node-129-data-8x-01,node-129-data-8x-02
 # 如果是在已部署节点服务器上新增，则需销毁服务器节点后，再执行扩容
 ```
 ## 步骤7：Kibana部署
@@ -335,7 +334,7 @@ vi /root/yogoo_es_ansible/playbook/inventory/kibana_8.9.2
 download_url=http://172.168.0.125:8080/elk
 supervisor_download_url=http://172.168.0.125:8080/elk
 version=8.9.2
-project_name=cluster_testarm
+project_name=cluster_testarm8
 path_base=/opt/elk
 supervisor_use_systemd=true
 running_user=elk
