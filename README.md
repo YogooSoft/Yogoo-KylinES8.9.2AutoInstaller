@@ -99,7 +99,7 @@ vi /etc/hosts
 安装sshpass 用于配置服务免密登录
 ```shell
 cd /root/yogoo_es_ansible/soft_pkg   
-yum localinstall -y sshpass-1.06-8.ky10.x86_64.rpm
+rpm -ivh sshpass-1.06-8.ky10.x86_64.rpm
 sshpass -V
 ```
 ### 3.3 配置免密登录
@@ -441,7 +441,7 @@ PUT _cluster/settings
 PUT _cluster/settings
 {  
   "persistent" : {  
-    "cluster.routing.allocation.awareness.attributes": "null"  
+    "cluster.routing.allocation.awareness.attributes": null  
   }  
 }
 
