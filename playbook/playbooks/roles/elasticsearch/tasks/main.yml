@@ -16,6 +16,8 @@
 
 #- debug: msg={{ steps }}
 
+#- debug: msg={{ skip_steps }}
+
 - include_tasks: "{{ step }}/main.yml"
   loop: "{{ steps | difference(skip_steps) }}"
   loop_control:

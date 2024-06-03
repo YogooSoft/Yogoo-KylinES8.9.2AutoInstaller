@@ -26,17 +26,17 @@
     #url_username: "{{ url_username }}"
     #url_password: "{{ url_password }}"
 
-# - name: Check elasticsearch-analysis-pinyin already downloaded
-#   when: run_once_per_host
-#   stat:
-#     path: "{{ path_packages }}/elasticsearch-analysis-pinyin-{{ version }}"
-#   register: result_downloaded
+- name: Check elasticsearch-analysis-pinyin already downloaded
+  when: run_once_per_host
+  stat:
+    path: "{{ path_packages }}/elasticsearch-analysis-pinyin-{{ version }}"
+  register: result_downloaded
 
-# - name: "Download elasticsearch-analysis-pinyin from {{ download_url }}/{{ pinyin_filename }}"
-#   when: run_once_per_host and result_downloaded.stat.exists == false
-#   get_url:
-#     url: "{{ download_url }}/{{ pinyin_filename }}"
-#     dest: "{{ path_tmp }}/{{ pinyin_filename }}"
+- name: "Download elasticsearch-analysis-pinyin from {{ download_url }}/{{ pinyin_filename }}"
+  when: run_once_per_host and result_downloaded.stat.exists == false
+  get_url:
+    url: "{{ download_url }}/{{ pinyin_filename }}"
+    dest: "{{ path_tmp }}/{{ pinyin_filename }}"
     #url_username: "{{ url_username }}"
     #url_password: "{{ url_password }}"
 

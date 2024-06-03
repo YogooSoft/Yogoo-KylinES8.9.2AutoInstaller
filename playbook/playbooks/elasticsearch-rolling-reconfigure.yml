@@ -36,8 +36,8 @@
         skip_steps:
           - system
           - install
-          - configure
+          #- configure
           - plugin
-          - security
+          #- security
         action: rolling-restart
 
